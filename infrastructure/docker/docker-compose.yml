@@ -1,0 +1,26 @@
+services:
+  postgres:
+    image: postgres:18
+    container_name: barberprime-postgres
+
+    ports:
+      - "5433:5432"
+
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+
+    volumes:
+      - barberprime-postgres-data:/var/lib/postgresql
+    
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+    restart: unless-stopped
+
+volumes:
+  barberprime-postgres-data:
